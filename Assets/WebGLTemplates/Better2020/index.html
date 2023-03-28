@@ -74,6 +74,38 @@
 #endif
       loadingCover.style.display = "";
 
+      function resizeCanvas() {
+        const minHeightRatio = 9 / 18;
+        const maxHeightRatio = 9 / 14;
+        const windowHeight = window.innerHeight;
+        const windowWidth = window.innerWidth;
+
+        let targetWidth, targetHeight;
+
+        if (windowWidth / windowHeight > maxHeightRatio) {
+          targetWidth = windowHeight * maxHeightRatio;
+          targetHeight = windowHeight;
+        } else if (windowWidth / windowHeight < minHeightRatio) {
+          targetWidth = windowWidth;
+          targetHeight = windowWidth / minHeightRatio;
+        } else {
+          targetWidth = windowWidth;
+          targetHeight = windowHeight;
+        }
+
+        container.style.width = targetWidth + 'px';
+        container.style.height = targetHeight + 'px';
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        container.style.position = 'absolute';
+        container.style.left = (windowWidth - container.offsetWidth) / 2 + 'px';
+        container.style.top = (windowHeight - container.offsetHeight) / 2 + 'px';
+      }
+
+      // Resize the canvas when the window is resized
+      window.addEventListener('resize', resizeCanvas);
+
       const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
@@ -94,6 +126,9 @@
         }).catch((message) => {
           alert(message);
         });
+
+        // Call resizeCanvas after the canvas is created
+        resizeCanvas();
       };
       document.body.appendChild(script);
     </script>
